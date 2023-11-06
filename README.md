@@ -1,5 +1,7 @@
 # Scores Tell Everything about Bob: Non-adaptive Face Reconstruction on Face Recognition Systems
 
+- Sunpill Kim, Yong Kiam Tan, Bora Jeong, Soumik Mondal, Khin Mi Mi Aung, and Jae Hong Seo
+- Accepted at IEEE S&P 2024
 
 ## Abstract
 This code is the implementation for the paper "Scores Tell Everything about Bob: Non-adaptive Face Reconstruction on Face Recognition Systems."
