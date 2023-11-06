@@ -32,8 +32,9 @@ utils
 Scores Tell Everything about Bob.ipynb           # step-by-step
 GenOFS.py                                        # Implementation for GenOFS.
 Attack.py                                        # Implementation for Quick Start.
-README.md
 Reconstruction.py                                # Implementation for our non-adaptive face reconstruction.
+Example.ipynb                                    # Example
+README.md
 ```
 
 - Pre-trained model : https://drive.google.com/file/d/1HxuQ3X7Mw7hu2cq-pWCdrRO5AMYGvQ8w/view?usp=drive_link
