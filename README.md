@@ -26,7 +26,7 @@ utils
     └── t1_cosface.pth
     └── t2_vit.pth
     └── t3_arcface.onnx
-    └── tt_sphereface.pth
+    └── t4_sphereface.pth
 └── dataset
     └── lfw.bin
 Scores Tell Everything about Bob.ipynb           # step-by-step
