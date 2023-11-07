@@ -7,15 +7,23 @@ import math
 from utils.utils import local_FRS, local_inverse
 
 
-def GenOFS(device, dataset, ofs_num=99, savepath='./param/ofs.pt'):
-    print('# dataset:', len(dataset))
+def GenOFS(device, dataset, ofs_num=99, savepath='./utils/param/ofs.pt'):
+    # For MS1MV3
+    # print('# dataset:', len(dataset))
+    
+    # For LFW
+    print('# dataset:', len(dataset[0][0]))
     
     local = local_FRS(device)
     local = local.eval().to(device)
     nbnet = local_inverse(device)  
     nbnet = nbnet.eval().to(device)    
     
-    img = dataset.__getitem__(0)[0]
+    # For MS1MV3
+    # img = dataset.__getitem__(0)[0]
+    
+    # For LFW (can not produce large number of OFS due to the number of contained image in LFW)
+    img = dataset.__getitem__(0)[0][0]
     temp_init = local(img.unsqueeze(0).to(device))
     recon = nbnet(F.normalize(temp_init))
     recon = F.interpolate(recon, (112,112), mode = 'nearest')
@@ -23,13 +31,21 @@ def GenOFS(device, dataset, ofs_num=99, savepath='./param/ofs.pt'):
 
     ofs = torch.zeros(ofs_num,3,112,112)
     ofs[0] = recon
+    print('---------------------------------num, id: 1, 0')
 
     j=1
     with torch.no_grad():
-        for id in range(len(dataset)):
-            if id%1000 == 0:
-                print('id = ', id)
-            img = dataset.__getitem__(id)[0]
+        # For MS1MV3
+        # for id in range(len(dataset)):
+        
+        for id in range(len(dataset[0][0])):
+            if id%100 == 0:
+                print('number of inference image = ', id)
+            # For MS1MV3
+            # img = dataset.__getitem__(id)[0]
+            
+            # For LFW
+            img = dataset.__getitem__(0)[0][id]
             temp_init = local(img.unsqueeze(0).to(device))
             temp_init = F.normalize(temp_init)
             basis2 = nbnet(temp_init)
@@ -37,12 +53,16 @@ def GenOFS(device, dataset, ofs_num=99, savepath='./param/ofs.pt'):
             temp2 = local(basis2)
 
             cos = F.cosine_similarity(temp, temp2)
-            if (torch.abs(cos)<0.0871).all():  
+            # For MS1MV3 
+            # if (torch.abs(cos)<0.0871).all():  
+            
+            # For LFW
+            if (torch.abs(cos)<0.8).all():  
                 temp = torch.cat([temp,temp2])
                 ofs[j] = basis2.detach().cpu()
-                print('---------------------------------num:', len(temp))
+                print('---------------------------------num, id: '+str(len(temp))+', '+str(int(id)))
                 j+=1 
-            if j==ofs_num+1:
+            if j==ofs_num:
                 print('Done.')
                 break
 
