@@ -39,7 +39,7 @@ The final directory structure should look like this:
 
 ```
 sample_LFW                                      # Three target images in LFW dataset, shown in the Table 1 of our paper.
-sample_OFS                                      # Pre-generated OFS containing 99 numbers of images.
+sample_OFS                                      # Pre-generated OFS containing 99 images.
 utils
 └── param                                       # Pre-trained FRSs.  
     └── local.pt
