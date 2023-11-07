@@ -6,19 +6,21 @@ ACCESS_KEY = "YOUR ACCESS_KEY"
 SECRET_KEY = "YOUR SECRET_KEY"
 REGION = "YOUR REGION"
 
-client = boto3.client("rekognition", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
+# Uncomment to create only one client
+# client = boto3.client("rekognition", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
 
 def sigmoid_inv(y, a, x0, k , b):
-    
+
     x = -1/k * np.log(a/(y-b) - 1) + x0
-    
+
     return x
 
 def cal_inv(param : list, confidence_float):
-    
+
     return sigmoid_inv(confidence_float, *param)
 
 def cosine_score_AWS(target_id):
+    client = boto3.client("rekognition", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
     confidence_score = torch.zeros(99)
     estimated_cosine_score = torch.zeros(99)
     for i in range(99):
@@ -44,10 +46,11 @@ def cosine_score_AWS(target_id):
         except:
 
             print("Error with detection")
-    
+
     return estimated_cosine_score
 
 def query_AWS(target_id,recon,type12):
+    client = boto3.client("rekognition", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
     if type12==1:
         target = './sample_LFW/L/'+str(target_id)+'.png'
     else:
@@ -55,7 +58,7 @@ def query_AWS(target_id,recon,type12):
 
     imageSource = open(recon, 'rb')
     imageTarget = open(target, 'rb')
-    
+
     response = client.compare_faces(SimilarityThreshold=0,
                                         SourceImage={'Bytes': imageSource.read()},
                                         TargetImage={'Bytes': imageTarget.read()})
