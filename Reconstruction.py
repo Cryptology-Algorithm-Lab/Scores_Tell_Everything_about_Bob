@@ -25,7 +25,11 @@ def direct_attack(args):
     savepath = './results/direct_type1_'+str(args.target_id)+'.png'
     targetimg = targetimg_type1(imgsize=args.bb_imgsize, target_id=args.target_id)
     ofs = args.ofs
-    ofs = ofs.to(args.device)
+    # Need to resize the OFS for the blackbox...
+    if args.bb_imgsize!=112:
+        ofsb = F.interpolate(ofs, (args.bb_imgsize,args.bb_imgsize), mode='nearest').to(args.device)
+    else:
+        ofsb = ofs.to(args.device)
     
     with torch.no_grad():
         # local process
@@ -41,10 +45,10 @@ def direct_attack(args):
             if args.vit == True:
                 decisions, coss = blackbox(args.bb_FRS, args.bb_th, args.bb_imgsize, args.bb_imgsize, img2ten_vit(targetimg).to(args.device), (ofs*255+127.5).to(args.device), args.device) 
             else:
-                decisions, coss = blackbox(args.bb_FRS, args.bb_th, args.bb_imgsize, args.bb_imgsize, img2ten(targetimg).to(args.device), ofs, args.device)
+                decisions, coss = blackbox(args.bb_FRS, args.bb_th, args.bb_imgsize, args.bb_imgsize, img2ten(targetimg).to(args.device), ofsb, args.device)
         else:
             coss = cosine_score_AWS(args.target_id).to(args.device)
-        
+
         # Reconstruct
         # x_hat : approximated feature vector of target image using pseudo inverse of A and cosine similairty
         # recon : output image tensor of x_hat (size : 128*128, range : [-1,1], before interpolation)
@@ -59,7 +63,7 @@ def direct_attack(args):
 
         img_prime = Image.open(savepath)
         img_prime = img_load(img_prime, args.bb_imgsize)
-            
+
         # Query to blackbox to impersonate
         # vit is Face Transformer based on Vision Transformer whose pre-processing is different from other face recognition model
         if args.bb_FRS!='AWS':
@@ -74,11 +78,11 @@ def direct_attack(args):
             # We updated it here for better consistency, so a few reconstructed images for t4, t5 will be changed
             # This leads to slightly better attack success rates for those FRSs.
             if (coss.max() > cos):
-                # print('special case',cos,coss.max(),coss.argmax(),(decisions==1).sum())
+                # print('special case',cos,coss.max(),coss.argmax(),coss[coss.argmax()],(decisions==1).sum())
                 img_prime_tmp = ofs[coss.argmax()]
                 img_prime_tmp = ((img_prime_tmp+1)/2).detach().cpu().numpy().transpose(1,2,0)      
                 cos = coss.max()
-                plt.imsave(savepath, img_prime_tmp)  
+                plt.imsave(savepath, img_prime_tmp)
                 img_prime = Image.open(savepath)
                 img_prime = img_load(img_prime, args.bb_imgsize)
 
