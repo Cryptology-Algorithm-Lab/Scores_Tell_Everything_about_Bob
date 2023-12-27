@@ -41,12 +41,7 @@ def direct_attack(args):
             if args.vit == True:
                 decisions, coss = blackbox(args.bb_FRS, args.bb_th, args.bb_imgsize, args.bb_imgsize, img2ten_vit(targetimg).to(args.device), (ofs*255+127.5).to(args.device), args.device) 
             else:
-                decisions, coss = blackbox(args.bb_FRS, args.bb_th, args.bb_imgsize, args.bb_imgsize, img2ten(targetimg).to(args.device), ofs, args.device)       
-
-            # If some image in OFS is closer than pre-defined threshold, we save the corresponding image as a candidate.
-            if (decisions==1).sum()>0:
-                img_prime_tmp = ofs[torch.where(decisions==1)][0]
-                img_prime_tmp = ((img_prime_tmp+1)/2).detach().cpu().numpy().transpose(1,2,0)
+                decisions, coss = blackbox(args.bb_FRS, args.bb_th, args.bb_imgsize, args.bb_imgsize, img2ten(targetimg).to(args.device), ofs, args.device)
         else:
             coss = cosine_score_AWS(args.target_id).to(args.device)
         
@@ -73,8 +68,15 @@ def direct_attack(args):
             else:
                 d, cos = blackbox(args.bb_FRS, args.bb_th, args.bb_imgsize, args.bb_imgsize, img2ten(targetimg).to(args.device), img2ten(img_prime).to(args.device), args.device)
                 
-            # If we saved some image in OFS as a candidate, compare cosine similarity between reconstruct image and pre-selected image in ofs
-            if coss.max()>cos:
+            # If something in the OFS has a better similarity score than our reconstruction, then we use the best image from the OFS
+            # Note that this special case was handled slightly differently for our paper's experiments
+            # where we picked arbitrarily from the OFS an image that crossed the threshold for a given system
+            # We updated it here for better consistency, so a few reconstructed images for t4, t5 will be changed
+            # This leads to slightly better attack success rates for those FRSs.
+            if (coss.max() > cos):
+                # print('special case',cos,coss.max(),coss.argmax(),(decisions==1).sum())
+                img_prime_tmp = ofs[coss.argmax()]
+                img_prime_tmp = ((img_prime_tmp+1)/2).detach().cpu().numpy().transpose(1,2,0)      
                 cos = coss.max()
                 plt.imsave(savepath, img_prime_tmp)  
                 img_prime = Image.open(savepath)
