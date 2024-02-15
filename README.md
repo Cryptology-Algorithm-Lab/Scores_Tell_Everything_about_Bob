@@ -31,6 +31,8 @@ The LFW dataset and model parameters (local, inverse, T1-T4) can be found at:
 https://drive.google.com/file/d/1HxuQ3X7Mw7hu2cq-pWCdrRO5AMYGvQ8w/view?usp=drive_link
 ```
 
+The above compilation is proivded for your convenience. The original links are here: [T1](https://onedrive.live.com/?authkey=%21AFZjr283nwZHqbA&id=4A83B6B633B029CC%215582&cid=4A83B6B633B029CC) on [Insightface](https://github.com/deepinsight/insightface/tree/master/recognition/arcface_torch), [T2](https://drive.google.com/drive/folders/1tKjPdDz9WiD-dCjHnkdnyLSs9HS9XUGW) on [Face-Transformer](https://github.com/zhongyy/Face-Transformer?tab=readme-ov-file), [T3](https://drive.google.com/file/d/1N0GL-8ehw_bz2eZQWz2b0A5XBdXdxZhg/view) on [Insightface](https://github.com/deepinsight/insightface/tree/master/model_zoo), [T4](https://drive.google.com/file/d/1ZO3clpW_NHTybOgXIhrA7Kid4OIpQnrG/view) on [opensphere](https://github.com/ydwen/opensphere?tab=readme-ov-file), and [LFW dataset](https://vis-www.cs.umass.edu/lfw/).
+
 After downloading, copy the `param` folder to `utils/param` and the `dataset` folder to `utils/dataset`.
 
 We provide our pre-generated OFS in the `sample_OFS` folder. Instead of the pre-generated OFS, you can generate your own OFS following `GenOFS.py` if you wish. You should prepare a pre-trained local FRS, and a dataset for extracting face tempaltes. 
@@ -38,7 +40,7 @@ We provide our pre-generated OFS in the `sample_OFS` folder. Instead of the pre-
 
 To facilitate reproducibility, we also provide all 83,000 images reconstructed from our attack against various targets. All reconsturcted images ('recon' folder in below) can be found at:
 ```
-TBA
+https://zenodo.org/records/10663045
 ```
 
 The final directory structure should look like this:
