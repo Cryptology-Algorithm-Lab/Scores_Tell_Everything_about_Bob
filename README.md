@@ -35,11 +35,22 @@ After downloading, copy the `param` folder to `utils/param` and the `dataset` fo
 
 We provide our pre-generated OFS in the `sample_OFS` folder. Instead of the pre-generated OFS, you can generate your own OFS following `GenOFS.py` if you wish. You should prepare a pre-trained local FRS, and a dataset for extracting face tempaltes. 
 
+
+To facilitate reproducibility, we also provide all 83,000 images reconstructed from our attack against various targets. All reconsturcted images ('recon' folder in below) can be found at:
+```
+TBA
+```
+
 The final directory structure should look like this:
 
 ```
 sample_LFW                                      # Three target images in LFW dataset, shown in the Table 1 of our paper.
 sample_OFS                                      # Pre-generated OFS containing 99 images.
+recon                                           # All images reconstructed from our attack against various targets.
+└── LFW                                            
+└── AGE                                         
+└── CFP                                         
+└── commercial_raw                              # All scores from commercial FRSs.  
 utils
 └── param                                       # Pre-trained FRSs.  
     └── local.pt
@@ -55,6 +66,18 @@ GenOFS.py                                       # Implementation for GenOFS.
 Attack.py                                       # Implementation for Quick Start.
 Reconstruction.py                               # Implementation for our non-adaptive face reconstruction.
 Example.ipynb                                   # Example
+Check Reconstructed Image.ipynb                 # Reproduce the attack success rate table using the reconstructed images.
 README.md
 ```
 
+## Citation
+```
+@inproceedings{kim2024scores,
+  title={Scores Tell Everything about Bob: Non-adaptive Face Reconstruction on Face Recognition Systems},
+  author={Kim, Sunpill and Tan, Yong Kiam and Jeong, Bora and Mondal, Soumik and Khin, Mi Mi Aung and Seo, Jae Hong},
+  booktitle={2024 IEEE Symposium on Security and Privacy (SP)},
+  pages={161--161},
+  year={2024},
+  organization={IEEE Computer Society}
+}
+```
